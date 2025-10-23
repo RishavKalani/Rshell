@@ -9,4 +9,7 @@ int main()
 
   // Uncomment this block to pass the first stage
   cout << "$ ";
+  string cmd;
+  getline(cin, cmd);
+  cout << cmd << ": command not found" << endl;
 }
