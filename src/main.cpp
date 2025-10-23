@@ -25,7 +25,7 @@ int main()
     }
     else if (cmd.size() >= 4 && cmd.substr(0, 4) == "type")
     {
-      if (cmd.substr(5) == "echo" || cmd.substr(5) == "type")
+      if (cmd.substr(5) == "echo" || cmd.substr(5) == "type" || cmd.substr(5) == "exit")
       {
         cout << cmd.substr(5) << " is a shell builtin" << endl;
       }
