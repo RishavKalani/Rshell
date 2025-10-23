@@ -31,7 +31,7 @@ int main()
       }
       else
       {
-        cout << "invalid_command: not found" << endl;
+        cout << cmd.substr(5) << ": not found" << endl;
       }
     }
     else
