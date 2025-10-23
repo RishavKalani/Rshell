@@ -23,6 +23,17 @@ int main()
     {
       cout << cmd.substr(5) << endl;
     }
+    else if (cmd.size() >= 4 && cmd.substr(0, 4) == "type")
+    {
+      if (cmd.substr(5) == "echo" || cmd.substr(5) == "type")
+      {
+        cout << cmd.substr(5) << " is a shell builtin" << endl;
+      }
+      else
+      {
+        cout << "invalid_command: not found" << endl;
+      }
+    }
     else
       cout << cmd << ": command not found" << endl;
   }
