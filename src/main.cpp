@@ -23,7 +23,8 @@ int main()
     {
       cout << cmd.substr(5) << endl;
     }
-    cout << cmd << ": command not found" << endl;
+    else
+      cout << cmd << ": command not found" << endl;
   }
   return 0;
 }
