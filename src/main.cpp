@@ -8,8 +8,12 @@ int main()
   cerr << std::unitbuf;
 
   // Uncomment this block to pass the first stage
-  cout << "$ ";
   string cmd;
-  getline(cin, cmd);
-  cout << cmd << ": command not found" << endl;
+  while (true)
+  {
+    cout << "$ ";
+    getline(cin, cmd);
+    cout << cmd << ": command not found" << endl;
+  }
+  return 0;
 }
