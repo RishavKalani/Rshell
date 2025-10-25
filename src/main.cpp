@@ -17,9 +17,9 @@ string findExecutableInPath(const string &command)
   string dir;
   while (getline(ss, dir, ':'))
   {
-    string fullPath = dir + "\\" + command;
+    string fullPath = dir + "/" + command;
     // constructed the fullpath for the file
-    if (access(fullPath.c_str(), 0) == 0) // checking the access of the file
+    if (access(fullPath.c_str(), X_OK) == 0) // checking the access of the file
     {
       // c_str() converts the string into a char pointer so that i can give access to the file location
       return fullPath;
@@ -62,7 +62,7 @@ int main()
         string path = findExecutableInPath(arg);
         if (!path.empty())
         {
-          cout << cmd << "is" << path << endl;
+          cout << arg << "is" << path << endl;
         }
         else
           cout << arg << ": not found" << endl;
