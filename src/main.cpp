@@ -62,7 +62,7 @@ int main()
         string path = findExecutableInPath(arg);
         if (!path.empty())
         {
-          cout << arg << " is" << path << endl;
+          cout << arg << " is " << path << endl;
         }
         else
           cout << arg << ": not found" << endl;
