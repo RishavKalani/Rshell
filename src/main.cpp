@@ -15,7 +15,7 @@ string findExecutableInPath(const string &command)
   stringstream ss(pathStr);
   // constrcuting a stringstream of the path
   string dir;
-  while (getline(ss, dir, ';'))
+  while (getline(ss, dir, ':'))
   {
     string fullPath = dir + "\\" + command;
     // constructed the fullpath for the file
