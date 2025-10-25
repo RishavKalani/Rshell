@@ -2,7 +2,6 @@
 #include <string>
 #include <sstream>
 #include <unistd.h>
-#include <io.h>
 using namespace std;
 
 string findExecutableInPath(const string &command)
@@ -20,7 +19,7 @@ string findExecutableInPath(const string &command)
   {
     string fullPath = dir + "\\" + command;
     // constructed the fullpath for the file
-    if (_access(fullPath.c_str(), 0) == 0) // checking the access of the file
+    if (access(fullPath.c_str(), 0) == 0) // checking the access of the file
     {
       // c_str() converts the string into a char pointer so that i can give access to the file location
       return fullPath;
