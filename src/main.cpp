@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <unistd.h>
+#include <io.h>
 using namespace std;
 
 string findExecutableInPath(const string &command)
