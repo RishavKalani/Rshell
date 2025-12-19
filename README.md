@@ -1,34 +1,30 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/765deb6f-8bb1-488e-ba9d-bf29a6aea05b)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# Rshell
 
-This is a starting point for C++ solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
+Rshell is a simple Unix-like command-line shell written in **C++** using **POSIX system calls**.  
+I built this project while working through the CodeCrafters “Build Your Own Shell” challenge to better understand how shells work internally.
 
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
+## What it can do
+- Run external commands using `fork()`, `execvp()`, and `waitpid()`
+- Supports basic built-in commands like `cd`, `pwd`, `exit`, `echo`, and `type`
+- Finds executables using the system `PATH`
+- Handles shell-style quoting and argument parsing
+- Supports output and error redirection (`>`, `>>`, `2>`, `2>>`)
+- Tab-based autocompletion for commands using raw terminal input (`termios`)
+- Basic directory navigation
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+## Tech used
+- **C++**
+- **POSIX APIs** (fork, execvp, waitpid, dup2, termios)
+- Tested on Unix-like systems (Linux/macOS)
 
-# Passing the first stage
+## How to run
 
-The entry point for your `shell` implementation is in `src/main.cpp`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
-
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+Compile:
+```bash
+g++ -std=c++17 main.cpp -o rshell
+```
+Run:
+```bash
+./rshell
 ```
 
-Time to move on to the next stage!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `cmake` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `src/main.cpp`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
