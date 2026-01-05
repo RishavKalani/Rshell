@@ -14,6 +14,10 @@ int main() {
     {
       return 0;
     }
+    else if(cmd.size()>=4 && cmd.substr(0,4)=="echo")
+    {
+      cout << cmd.substr(5) << endl;
+    }
     cout << cmd << ": command not found" << endl;
   }
   
