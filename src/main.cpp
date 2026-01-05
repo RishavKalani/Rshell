@@ -10,8 +10,11 @@ int main() {
     cout << "$ ";
     string cmd;
     getline(cin , cmd);
+    if(cmd=="exit")
+    {
+      return 0;
+    }
     cout << cmd << ": command not found" << endl;
-    
   }
   
   // TODO: Uncomment the code below to pass the first stage
