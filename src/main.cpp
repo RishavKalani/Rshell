@@ -18,7 +18,9 @@ int main() {
     {
       cout << cmd.substr(5) << endl;
     }
-    cout << cmd << ": command not found" << endl;
+    else{
+      cout << cmd << ": command not found" << endl;
+    } 
   }
   
   // TODO: Uncomment the code below to pass the first stage
