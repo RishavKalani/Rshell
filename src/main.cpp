@@ -14,6 +14,16 @@ int main() {
     {
       return 0;
     }
+    else if(cmd.size()>=4 && cmd.substr(0,4)=="type")
+    {
+      if(cmd.substr(5)=="echo" || cmd.substr(5)=="exit")
+      {
+        cout << cmd.substr(5) << " is a shell builtin" << endl;
+      }
+      else{
+        cout << cmd.substr(5) << ": not found" << endl;
+      }
+    }
     else if(cmd.size()>=4 && cmd.substr(0,4)=="echo")
     {
       cout << cmd.substr(5) << endl;
