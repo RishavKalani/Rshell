@@ -5,7 +5,7 @@ int main() {
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
   cerr << unitbuf;
-  cout << "$";
+  cout << "$ ";
   string cmd;
   getline(cin , cmd);
   cout << cmd << ": command not found" << endl;
