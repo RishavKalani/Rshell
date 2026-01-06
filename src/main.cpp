@@ -103,8 +103,7 @@ int main() {
         //waits for the status update from child.
       }
     } 
-    return 0;
   }
-  
+  return 0;
   // TODO: Uncomment the code below to pass the first stage
 }
