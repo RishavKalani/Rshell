@@ -107,6 +107,7 @@ int main() {
           str.push_back(x);
         }
       }
+      cout << str << endl;
     }
     else if(cmd=="cd")
     {
