@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <limits.h>
 using namespace std;
+namespace fs = std::filesystem;
 
 string findExecutableInPath(const string &command){
   if(command.find('/')!=string::npos)
@@ -62,7 +63,7 @@ int main() {
     else if(cmd.size()>=4 && cmd.substr(0,4)=="type")
     {
       string arg=cmd.substr(5);
-      if(cmd.substr(5)=="echo" || cmd.substr(5)=="exit" || cmd.substr(5)=="type" || cmd.substr(5)=="pwd")
+      if(cmd.substr(5)=="echo" || cmd.substr(5)=="exit" || cmd.substr(5)=="type" || cmd.substr(5)=="pwd" || arg=="cd")
       {
         cout << cmd.substr(5) << " is a shell builtin" << endl;
       }
@@ -80,6 +81,23 @@ int main() {
     else if(cmd.size()>=4 && cmd.substr(0,4)=="echo")
     {
       cout << cmd.substr(5) << endl;
+    }
+    else if(cmd=="cd")
+    {
+      char *home=getenv("HOME");
+      fs::current_path(home);
+    }
+    else if(cmd.size()>=2 && cmd.substr(0,2)=="cd"){
+      string arg=cmd.substr(3);
+      fs::path dir_path(arg);
+      fs::path p=fs::current_path();
+      if(!fs::exists(dir_path )|| !fs::is_directory(dir_path))
+      {
+        cout << "cd: " << arg << ": No such file or directory" << endl;
+      }
+      else{
+        fs::current_path(dir_path);
+      }
     }
     else{
       vector<string> words;
