@@ -89,6 +89,12 @@ int main() {
     }
     else if(cmd.size()>=2 && cmd.substr(0,2)=="cd"){
       string arg=cmd.substr(3);
+      if(arg=="~")
+      {
+        char *home=getenv("HOME");
+        fs::current_path(home);
+        continue;
+      }
       fs::path dir_path(arg);
       fs::path p=fs::current_path();
       if(!fs::exists(dir_path )|| !fs::is_directory(dir_path))
