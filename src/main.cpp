@@ -80,7 +80,33 @@ int main() {
     }
     else if(cmd.size()>=4 && cmd.substr(0,4)=="echo")
     {
-      cout << cmd.substr(5) << endl;
+      string arg=cmd.substr(5);
+      int n=arg.size();
+      string str;
+      int ct=0;
+      bool flag=false;
+      for(int i=0;i<n;i++)
+      {
+        char x=arg[i];
+        if(x=='\'') {
+          ct++;
+        }
+        if(x==' ' && ct%2==1)
+        {
+          str.push_back(x);
+        }
+        if(x==' ' && ct%2==0)
+        {
+          if(i>0 && arg[i-1]!=' ')
+          {
+            str.push_back(x);
+          }
+        }
+        if(x!=' ' && x!='\'')
+        {
+          str.push_back(x);
+        }
+      }
     }
     else if(cmd=="cd")
     {
