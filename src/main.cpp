@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <vector>
 #include <sys/wait.h>
+#include <filesystem>
+#include <limits.h>
 using namespace std;
 
 string findExecutableInPath(const string &command){
@@ -45,6 +47,17 @@ int main() {
     if(cmd=="exit")
     {
       return 0;
+    }
+    else if(cmd=="pwd")
+    {
+      char cwd[PATH_MAX];
+      if(getcwd(cwd,sizeof(cwd))!=nullptr)
+      {
+        cout << cwd << endl;
+      }
+      else{
+        perror("pwd");
+      }
     }
     else if(cmd.size()>=4 && cmd.substr(0,4)=="type")
     {
