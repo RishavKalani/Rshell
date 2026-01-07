@@ -66,7 +66,6 @@ vector<string> tokenize(const string &input){
       current.push_back(input[i]);
     }
   }
-  return tokens;
 }
 
 int main() {
@@ -77,10 +76,11 @@ int main() {
   while(true)
   {
     cout << "$ ";
-    string cmd;
-    getline(cin , cmd);
-    cmd.push_back(' ');
-    vector<string> command=tokenize(cmd);
+    string cmd1,cmd;
+    getline(cin , cmd1);
+    cmd=cmd1;
+    cmd1.push_back(' ');
+    vector<string> command=tokenize(cmd1);
     if(command[0]=="exit")
     {
       return 0;
@@ -125,27 +125,27 @@ int main() {
       }
       cout << endl;
     }
-    else if(cmd=="cd")
-    {
-      char *home=getenv("HOME");
-      fs::current_path(home);
-    }
-    else if(cmd.size()>=2 && cmd.substr(0,2)=="cd"){
-      string arg=cmd.substr(3);
-      if(arg=="~")
-      {
+    else if(command[0]=="cd"){
+      if(command.size()==1){
         char *home=getenv("HOME");
         fs::current_path(home);
-        continue;
-      }
-      fs::path dir_path(arg);
-      fs::path p=fs::current_path();
-      if(!fs::exists(dir_path )|| !fs::is_directory(dir_path))
-      {
-        cout << "cd: " << arg << ": No such file or directory" << endl;
       }
       else{
-        fs::current_path(dir_path);
+        string arg=command[1];
+        if(arg=="~")
+        {
+          char *home=getenv("HOME");
+          fs::current_path(home);
+          continue;
+        }
+        fs::path dir_path(arg);
+        fs::path p=fs::current_path();
+        if(!fs::exists(dir_path) || !fs::is_directory(dir_path)){
+          cout << "cd: " << arg << ": No such file or directory" << endl;
+        }
+        else{
+          fs::current_path(dir_path);
+        }
       }
     }
     else{
