@@ -45,12 +45,12 @@ vector<string> tokenize(const string &input){
   int ct1=0,ct2=0;
   for(int i=0;i<input.size();i++)
   {
-    if(input[i]=='\\'){
+    if(input[i]=='\\' && ct1%2==0 && ct2%2==0){
       i++;
       current.push_back(input[i]);
       continue;
     }
-    if(input[i]=='"')
+    if(input[i]=='"' && ct2%2==0)
     {
       ct1++;
       continue;
@@ -59,7 +59,7 @@ vector<string> tokenize(const string &input){
       current.push_back(input[i]);
       continue;
     }
-    if(input[i]=='\'')
+    if(input[i]=='\'' && ct1%2==0)
     {
       ct2++;
       continue;
