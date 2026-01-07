@@ -51,6 +51,7 @@ vector<string> tokenize(const string &input){
       continue;
     }
     if(i>0 && input[i-1]=='\\'){
+      current.pop_back();
       current.push_back(input[i]);
       continue;
     }
