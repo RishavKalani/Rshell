@@ -66,6 +66,7 @@ vector<string> tokenize(const string &input){
       current.push_back(input[i]);
     }
   }
+  return tokens;
 }
 
 int main() {
