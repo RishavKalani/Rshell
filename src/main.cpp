@@ -124,7 +124,7 @@ int main() {
       }
       cout << endl;
     }
-    else if(command[0]=="cd")
+    else if(cmd=="cd")
     {
       char *home=getenv("HOME");
       fs::current_path(home);
