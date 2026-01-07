@@ -50,6 +50,10 @@ vector<string> tokenize(const string &input){
       ct1++;
       continue;
     }
+    if(ct1%2==1){
+      current.push_back(input[i]);
+      continue;
+    }
     if(input[i]=='\'')
     {
       ct2++;
