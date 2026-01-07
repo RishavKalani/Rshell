@@ -50,6 +50,10 @@ vector<string> tokenize(const string &input){
       ct1++;
       continue;
     }
+    if(i>0 && input[i-1]=='\\'){
+      current.push_back(input[i]);
+      continue;
+    }
     if(ct1%2==1){
       current.push_back(input[i]);
       continue;
@@ -97,7 +101,7 @@ int main() {
       {
         cout << cwd << endl;
       }
-      else{
+      else{ 
         perror("pwd");
       }
     }
