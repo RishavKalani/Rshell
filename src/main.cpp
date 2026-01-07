@@ -6,6 +6,8 @@
 #include <sys/wait.h>
 #include <filesystem>
 #include <limits.h>
+#include <stdio.h>
+#include <set>
 using namespace std;
 namespace fs = std::filesystem;
 
@@ -36,20 +38,53 @@ string findExecutableInPath(const string &command){
   }
   return "";
 }
+
+vector<string> tokenize(const string &input){
+  string current;
+  vector<string> tokens;
+  int ct1=0,ct2=0;
+  for(int i=0;i<input.size();i++)
+  {
+    if(input[i]=='"')
+    {
+      ct1++;
+      continue;
+    }
+    if(input[i]=='\'')
+    {
+      ct2++;
+      continue;
+    }
+    if(input[i]==' ' && ct1%2==0 && ct2%2==0)
+    {
+      if(!current.empty()){
+        tokens.push_back(current);
+      }
+      current.clear();
+    }
+    else{
+      current.push_back(input[i]);
+    }
+  }
+  return tokens;
+}
 int main() {
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
   cerr << unitbuf;
+  set<string> kw={"echo","type","exit","pwd","cd"};
   while(true)
   {
     cout << "$ ";
     string cmd;
     getline(cin , cmd);
-    if(cmd=="exit")
+    cmd.push_back(' ');
+    vector<string> command=tokenize(cmd);
+    if(command[0]=="exit")
     {
       return 0;
     }
-    else if(cmd=="pwd")
+    else if(command[0]=="pwd")
     {
       char cwd[PATH_MAX];
       if(getcwd(cwd,sizeof(cwd))!=nullptr)
@@ -63,9 +98,9 @@ int main() {
     else if(cmd.size()>=4 && cmd.substr(0,4)=="type")
     {
       string arg=cmd.substr(5);
-      if(cmd.substr(5)=="echo" || cmd.substr(5)=="exit" || cmd.substr(5)=="type" || cmd.substr(5)=="pwd" || arg=="cd")
+      if(kw.count(arg)!=0)
       {
-        cout << cmd.substr(5) << " is a shell builtin" << endl;
+        cout << arg << " is a shell builtin" << endl;
       }
       else{
         string path=findExecutableInPath(arg);
@@ -78,38 +113,17 @@ int main() {
         }
       }
     }
-    else if(cmd.size()>=4 && cmd.substr(0,4)=="echo")
+    else if(command[0]=="echo")
     {
-      string arg=cmd.substr(5);
-      int n=arg.size();
-      string str;
-      int ct=0;
-      bool flag=false;
-      for(int i=0;i<n;i++)
+      auto it=command.begin();
+      it++;
+      while(it!=command.end())
       {
-        char x=arg[i];
-        if(x=='\'') {
-          ct++;
-        }
-        if(x==' ' && ct%2==1)
-        {
-          str.push_back(x);
-        }
-        if(x==' ' && ct%2==0)
-        {
-          if(i>0 && arg[i-1]!=' ')
-          {
-            str.push_back(x);
-          }
-        }
-        if(x!=' ' && x!='\'')
-        {
-          str.push_back(x);
-        }
+        cout << *it << endl;
+        it++;
       }
-      cout << str << endl;
     }
-    else if(cmd=="cd")
+    else if(command[0]=="cd")
     {
       char *home=getenv("HOME");
       fs::current_path(home);
@@ -136,10 +150,7 @@ int main() {
       vector<string> words;
       stringstream ss(cmd);
       string dir;
-      while(ss >> dir)
-      {
-        words.push_back(dir);
-      }
+      vector<string> words=tokenize(cmd);
       string s=words[0];
       string execpath=findExecutableInPath(s);
       if(execpath.empty())
