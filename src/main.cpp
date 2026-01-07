@@ -147,7 +147,6 @@ int main() {
       }
     }
     else{
-      vector<string> words;
       stringstream ss(cmd);
       string dir;
       vector<string> words=tokenize(cmd);
