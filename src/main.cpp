@@ -119,9 +119,10 @@ int main() {
       it++;
       while(it!=command.end())
       {
-        cout << *it << endl;
+        cout << *it << " ";
         it++;
       }
+      cout << endl;
     }
     else if(command[0]=="cd")
     {
