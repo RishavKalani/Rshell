@@ -68,6 +68,7 @@ vector<string> tokenize(const string &input){
   }
   return tokens;
 }
+
 int main() {
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
