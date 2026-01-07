@@ -152,6 +152,7 @@ int main() {
     else{
       stringstream ss(cmd);
       string dir;
+      cmd+=' ';
       vector<string> words=tokenize(cmd);
       string s=words[0];
       string execpath=findExecutableInPath(s);
