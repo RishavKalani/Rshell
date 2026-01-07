@@ -45,7 +45,7 @@ vector<string> tokenize(const string &input){
   int ct1=0,ct2=0;
   for(int i=0;i<input.size();i++)
   {
-    if(input[i]=='\\' && ct1%2==0 && ct2%2==0){
+    if(input[i]=='\\' && ct2%2==0){
       i++;
       current.push_back(input[i]);
       continue;
