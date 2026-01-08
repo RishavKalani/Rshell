@@ -105,19 +105,33 @@ int main() {
     cmd1.push_back(' ');
     vector<string> command=tokenize(cmd1);
     //redirection parsing
-    bool redirect= false;
-    bool append=false;
+    bool redirect_out= false,redirect_err=false;
+    bool append_out=false,append_err=false;
     string outfile;
     vector<string> cleaned;
     for(int i=0;i<command.size();i++)
     {
-      if(command[i]==">" || command[i]==">>" ||command[i]=="1>")
+      if(command[i]==">" || command[i]==">>" ||command[i]=="1>" || command[i]=="1>>")
       {
-        redirect=true;
-        if(command[i]==">>") append=true;
+        redirect_out=true;
+        if(command[i]==">>" || command[i]=="1>>") append_out=true;
         if(i+1 >= command.size()){
           cout << "syntax error" << endl;
-          redirect = false;
+          redirect_out = false;
+          break;
+        }
+        outfile=command[i+1];
+        i++;
+      }
+      else if(command[i]=="2>" || command[i]=="2>>")
+      {
+        redirect_err = true;
+        if(command[i]=="2>>"){
+          append_err=true;
+        }
+        if(i+1>= command.size()){
+          cout << "Syntax error" << endl;
+          redirect_err=false;
           break;
         }
         outfile=command[i+1];
@@ -130,10 +144,10 @@ int main() {
     command=cleaned;
     //applying redirection
     int saved_stdout=-1,fd=-1;
-    if(redirect)
+    if(redirect_out)
     {
       saved_stdout=dup(STDOUT_FILENO);
-      if(append){
+      if(append_out){
         fd=open(outfile.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
       }      
       else{
@@ -145,6 +159,21 @@ int main() {
         continue;
       }
       dup2(fd,STDOUT_FILENO);
+      close(fd);
+    }
+    if(redirect_err){
+      saved_stdout=dup(STDERR_FILENO);
+      if(append_err){
+        fd=open(outfile.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
+      }
+      else{
+        fd=open(outfile.c_str(),O_WRONLY|O_CREAT|O_TRUNC,0644);
+      }
+      if(fd<0){
+        perror("open");
+        continue;
+      }
+      dup2(fd,STDERR_FILENO);
       close(fd);
     }
     if(command[0]=="exit")
@@ -244,11 +273,14 @@ int main() {
         //waits for the status update from child.
       }
     } 
-    if(redirect){
+    if(redirect_out){
       dup2(saved_stdout,STDOUT_FILENO);
+      close(saved_stdout);
+    }
+    if(redirect_err){
+      dup2(saved_stdout,STDERR_FILENO);
       close(saved_stdout);
     }
   }
   return 0;
-  // TODO: Uncomment the code below to pass the first stage
 }
