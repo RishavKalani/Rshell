@@ -162,21 +162,23 @@ int main() {
         perror("pwd");
       }
     }
-    else if(cmd.size()>=4 && cmd.substr(0,4)=="type")
+    else if(command[0]=="type")
     {
-      string arg=cmd.substr(5);
-      if(kw.count(arg)!=0)
+      if(command.size()==1)
       {
-        cout << arg << " is a shell builtin" << endl;
+        cout << command[0] << endl;
+      }
+      if(kw.count(command[1]))
+      {
+        cout << command[1] << " is a shell builtin" << endl;
       }
       else{
-        string path=findExecutableInPath(arg);
-        if(!path.empty())
-        {
-          cout << arg << " is " << path << endl;
+        string path=findExecutableInPath(command[1]);
+        if(!path.empty()){
+          cout << command[1] << " is " << path << endl;
         }
         else{
-          cout << cmd.substr(5) << ": not found" << endl;
+          cout << command[1] << ": not found" << endl;
         }
       }
     }
@@ -215,19 +217,15 @@ int main() {
       }
     }
     else{
-      stringstream ss(cmd);
-      string dir;
-      cmd+=' ';
-      vector<string> words=tokenize(cmd);
-      string s=words[0];
+      string s=command[0];
       string execpath=findExecutableInPath(s);
       if(execpath.empty())
       {
-        cout << words[0] << ": command not found" << endl;
+        cout << command[0] << ": command not found" << endl;
         continue;
       }
       vector<char *> argv;
-      for(auto &w:words){
+      for(auto &w:command){
         argv.push_back(const_cast<char *>(w.c_str()));
       }
       argv.push_back(nullptr);
