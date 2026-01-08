@@ -196,11 +196,9 @@ int main() {
     else if(command[0]=="history"){
       if(command.size()>1)
       {
-        int k=1;
         int val=stoi(command[1]);
         for(int i=history.size()-val;i<history.size();i++){
-          cout << k << " " << history[i] << endl;
-          k++;
+          cout << i+1 << " " << history[i] << endl;
         }
         continue;
       }
