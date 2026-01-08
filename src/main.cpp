@@ -198,8 +198,8 @@ int main() {
       {
         int k=1;
         int val=stoi(command[1]);
-        for(int i=command.size()-val;i<command.size();i++){
-          cout << k << " " << command[i] << endl;
+        for(int i=history.size()-val;i<history.size();i++){
+          cout << k << " " << history[i] << endl;
           k++;
         }
         continue;
