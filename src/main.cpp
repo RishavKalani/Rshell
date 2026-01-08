@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <set>
+#include <fcntl.h>
 using namespace std;
 namespace fs = std::filesystem;
 
@@ -103,6 +104,49 @@ int main() {
     cmd=cmd1;
     cmd1.push_back(' ');
     vector<string> command=tokenize(cmd1);
+    //redirection parsing
+    bool redirect= false;
+    bool append=false;
+    string outfile;
+    vector<string> cleaned;
+    for(int i=0;i<command.size();i++)
+    {
+      if(command[i]==">" || command[i]==">>")
+      {
+        redirect=true;
+        if(command[i]==">>") append=true;
+        if(i+1 >= command.size()){
+          cout << "syntax error" << endl;
+          redirect = false;
+          break;
+        }
+        outfile=command[i+1];
+        i++;
+      }
+      else{
+        cleaned.push_back(command[i]);
+      }
+    }
+    command=cleaned;
+    //applying redirection
+    int saved_stdout=-1,fd=-1;
+    if(redirect)
+    {
+      saved_stdout=dup(STDOUT_FILENO);
+      if(append){
+        fd=open(outfile.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
+      }      
+      else{
+        fd=open(outfile.c_str(),O_WRONLY|O_CREAT|O_TRUNC,0644);
+      }
+      if(fd<0)
+      {
+        perror("open");
+        continue;
+      }
+      dup2(fd,STDOUT_FILENO);
+      close(fd);
+    }
     if(command[0]=="exit")
     {
       return 0;
@@ -202,6 +246,10 @@ int main() {
         //waits for the status update from child.
       }
     } 
+    if(redirect){
+      dup2(saved_stdout,STDOUT_FILENO);
+      close(saved_stdout);
+    }
   }
   return 0;
   // TODO: Uncomment the code below to pass the first stage
