@@ -95,12 +95,14 @@ int main() {
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
   cerr << unitbuf;
-  set<string> kw={"echo","type","exit","pwd","cd"};
+  vector<string> history;
+  set<string> kw={"echo","type","exit","pwd","cd","history"};
   while(true)
   {
     cout << "$ ";
     string cmd1,cmd;
     getline(cin , cmd1);
+    history.push_back(cmd1);
     cmd=cmd1;
     cmd1.push_back(' ');
     vector<string> command=tokenize(cmd1);
@@ -189,6 +191,11 @@ int main() {
       }
       else{ 
         perror("pwd");
+      }
+    }
+    else if(command[0]=="history"){
+      for(int i=0;i<history.size();i++){
+        cout << i+1 << " " << history[i] << endl;
       }
     }
     else if(command[0]=="type")
