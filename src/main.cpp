@@ -111,7 +111,7 @@ int main() {
     vector<string> cleaned;
     for(int i=0;i<command.size();i++)
     {
-      if(command[i]==">" || command[i]==">>")
+      if(command[i]==">" || command[i]==">>" ||command[i]=="1>")
       {
         redirect=true;
         if(command[i]==">>") append=true;
