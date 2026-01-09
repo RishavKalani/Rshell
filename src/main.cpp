@@ -8,6 +8,8 @@
 #include <limits.h>
 #include <stdio.h>
 #include <set>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <fcntl.h>
 using namespace std;
 namespace fs = std::filesystem;
@@ -38,6 +40,26 @@ string findExecutableInPath(const string &command){
     }
   }
   return "";
+}
+
+char* builtin_generator(const char* text,int state){
+  static int index;
+  static const char *builtins[]={"echo","exit","type",nullptr};
+  if(state==0){
+    index=0;
+  }
+  while(builtins[index]){
+    const char* cmd=builtins[index]++;
+    if(strncmp(cmd,text,strlen(text)) == 0){
+      string result = string(cmd);
+      return strdup(result.c_str());
+    }
+  }
+  return nullptr;
+}
+
+char** custom_completion(const char * text,int start,int end){
+  return rl_completion_matches(text,builtin_generator);
 }
 
 vector<string> tokenize(const string &input){
@@ -97,15 +119,22 @@ int main() {
   cerr << unitbuf;
   vector<string> history;
   set<string> kw={"echo","type","exit","pwd","cd","history"};
+  rl_attempted_completion_function = custom_completion;
   while(true)
   {
-    cout << "$ ";
-    string cmd1,cmd;
-    getline(cin , cmd1);
-    history.push_back(cmd1);
-    cmd=cmd1;
-    cmd1.push_back(' ');
-    vector<string> command=tokenize(cmd1);
+    char *cmd1 = readline("$ ");
+    if(!cmd1){
+      break;
+    }
+    if(*cmd1){
+      add_history(cmd1);
+    }
+    string cmd(cmd1);
+    free(cmd1);
+    history.push_back(cmd);
+    cmd.push_back(' ');
+    vector<string> command=tokenize(cmd);
+    
     //redirection parsing
     bool redirect_out= false,redirect_err=false;
     bool append_out=false,append_err=false;
