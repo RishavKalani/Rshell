@@ -11,8 +11,46 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <fcntl.h>
+#include <algorithm>
 using namespace std;
 namespace fs = std::filesystem;
+
+vector<string> all_commands;
+
+void initialize_completion_list(){
+  static const char* builtin[]={"echo","exit","type","cd","pwd","history",nullptr};
+  set<string> seen;
+  //builtin commands are added to the all commands list
+  for(int i=0;builtin[i];i++){
+    all_commands.push_back(builtin[i]);
+    seen.insert(builtin[i]);
+  }
+  //add executables from path
+  char *path_env=getenv("PATH");
+  if(!path_env){
+    return;
+  }
+  string path(path_env);
+  stringstream ss(path);
+  string dir;
+  while(getline(ss,dir,':')){
+    if(!fs::exists(dir)) continue;
+    for(const auto &entry : fs::directory_iterator(dir))
+    {
+      const fs::path &p = entry.path();
+
+      if(!fs::is_regular_file(p)) continue;
+      
+      if(access(p.c_str(),X_OK)!=0) continue;
+
+      string name = p.filename().string();
+      if(seen.insert(name).second){
+        all_commands.push_back(name);
+      }
+    }
+  }
+  sort(all_commands.begin(),all_commands.end());
+}
 
 string findExecutableInPath(const string &command){
   if(command.find('/')!=string::npos)
@@ -42,24 +80,23 @@ string findExecutableInPath(const string &command){
   return "";
 }
 
-char* builtin_generator(const char* text,int state){
+char* builtin_and_executable_generator(const char* text,int state){
   static int index;
-  static const char *builtins[]={"echo","exit","type",nullptr};
+  //static const char *builtins[]={"echo","exit","type","pwd","cd","history",nullptr};
   if(state==0){
     index=0;
   }
-  while(builtins[index]){
-    const char* cmd=builtins[index++];
-    if(strncmp(cmd,text,strlen(text)) == 0){
-      string result = string(cmd);
-      return strdup(result.c_str());
+  while(index < all_commands.size()){ 
+    const string &cmd=all_commands[index++];
+    if(cmd.compare(0,strlen(text),text) == 0){
+      return strdup(cmd.c_str());
     }
   }
   return nullptr;
 }
 
 char** custom_completion(const char * text,int start,int end){
-  return rl_completion_matches(text,builtin_generator);
+  return rl_completion_matches(text,builtin_and_executable_generator);
 }
 
 vector<string> tokenize(const string &input){
@@ -113,12 +150,13 @@ vector<string> tokenize(const string &input){
   return tokens;
 }
 
-int main() {
+int main(){
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
   cerr << unitbuf;
   vector<string> history;
   set<string> kw={"echo","type","exit","pwd","cd","history"};
+  initialize_completion_list();
   rl_attempted_completion_function = custom_completion;
   while(true)
   {
