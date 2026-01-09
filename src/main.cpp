@@ -49,7 +49,7 @@ char* builtin_generator(const char* text,int state){
     index=0;
   }
   while(builtins[index]){
-    const char* cmd=builtins[index]++;
+    const char* cmd=builtins[index++];
     if(strncmp(cmd,text,strlen(text)) == 0){
       string result = string(cmd);
       return strdup(result.c_str());
@@ -134,7 +134,7 @@ int main() {
     history.push_back(cmd);
     cmd.push_back(' ');
     vector<string> command=tokenize(cmd);
-    
+
     //redirection parsing
     bool redirect_out= false,redirect_err=false;
     bool append_out=false,append_err=false;
