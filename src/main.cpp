@@ -302,6 +302,7 @@ int main(){
     }
     if(command[0]=="exit")
     {
+      if(histfile!=nullptr)
       write_from_history(histfile,history);
       return 0;
     }
