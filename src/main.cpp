@@ -15,6 +15,7 @@
 #include <fstream>
 using namespace std;
 namespace fs = std::filesystem;
+size_t history_written_upto = 0;
 
 vector<string> all_commands;
 
@@ -69,6 +70,7 @@ void read_from_history(const string &path,vector<string> &history){
       add_history(line.c_str());
     }
   }
+  
 }
 
 void write_from_history(const string &path,vector<string> &history)
@@ -81,6 +83,21 @@ void write_from_history(const string &path,vector<string> &history)
   for(const string &cmd: history){
     file << cmd << endl;
   }
+  history_written_upto = history.size();
+  file.close();
+}
+
+void append_history_to_file(const string &path,vector<string> &history ,size_t &written_upto){
+  ofstream file(path,ios::out|ios::app);
+
+  if(!file){
+    perror("history");
+    return;
+  }
+  for(size_t i = written_upto;i<history.size();i++){
+    file << history[i] << endl;
+  }
+  written_upto = history.size();
   file.close();
 }
 
@@ -295,7 +312,10 @@ int main(){
     }
     else if(command[0]=="history"){
       if(command.size()>2){
-
+        if(command[1]=="-a"){
+          append_history_to_file(command[2],history,history_written_upto);
+          continue;
+        }
         if(command[1]=="-r")
         {
           read_from_history(command[2],history);
