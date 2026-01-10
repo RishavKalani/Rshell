@@ -301,7 +301,7 @@ int main(){
           read_from_history(command[2],history);
           continue;
         }
-        if(command[1]=="w")
+        if(command[1]=="-w")
         {
           write_from_history(command[2],history);
           continue;
