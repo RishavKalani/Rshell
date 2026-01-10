@@ -201,8 +201,11 @@ vector<string> tokenize(const string &input){
 
 int main(){
   vector<string> history;
-  string histfile = getenv("HISTFILE");
-  read_from_history(histfile,history);
+  char *histfile= getenv("HISTFILE");
+  if(histfile!=nullptr){
+    read_from_history(histfile,history);
+    history_written_upto = history.size();
+  }
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
   cerr << unitbuf;
