@@ -62,6 +62,7 @@ void read_from_history(const string &path,vector<string> &history){
   string line;
   while(getline(file,line)){
     if(!line.empty()){
+      history.push_back(line);
       add_history(line.c_str());
     }
   }
@@ -179,13 +180,11 @@ int main(){
     if(!cmd1){
       break;
     }
-    if(*cmd1){
-      add_history(cmd1);
-    }
-    string cmd(cmd1);
+    string raw_cmd(cmd1);
+    history.push_back(raw_cmd);
+    add_history(raw_cmd.c_str());
     free(cmd1);
-    history.push_back(cmd);
-    cmd.push_back(' ');
+    string cmd = raw_cmd+" ";
     vector<string> command=tokenize(cmd);
 
     //redirection parsing
@@ -279,6 +278,7 @@ int main(){
       if(command.size()>2){
         if(command[1]=="-r"){
           read_from_history(command[2],history);
+          continue;
         }
       }
       if(command.size()==2)
