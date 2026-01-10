@@ -302,6 +302,7 @@ int main(){
     }
     if(command[0]=="exit")
     {
+      write_from_history(histfile,history);
       return 0;
     }
     else if(command[0]=="pwd")
