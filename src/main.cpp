@@ -12,6 +12,7 @@
 #include <readline/history.h>
 #include <fcntl.h>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 namespace fs = std::filesystem;
 
@@ -50,6 +51,20 @@ void initialize_completion_list(){
     }
   }
   sort(all_commands.begin(),all_commands.end());
+}
+
+void read_from_history(const string &path,vector<string> &history){
+  ifstream file(path);
+  if(!file){
+    perror("history");
+    return;
+  }
+  string line;
+  while(getline(file,line)){
+    if(!line.empty()){
+      add_history(line.c_str());
+    }
+  }
 }
 
 string findExecutableInPath(const string &command){
@@ -101,7 +116,7 @@ char** custom_completion(const char * text,int start,int end){
 
 vector<string> tokenize(const string &input){
   string current;
-  vector<string> tokens;
+  vector<string> tokens;  
   int ct1=0,ct2=0;
   for(int i=0;i<input.size();i++)
   {
@@ -261,7 +276,12 @@ int main(){
       }
     }
     else if(command[0]=="history"){
-      if(command.size()>1)
+      if(command.size()>2){
+        if(command[1]=="-r"){
+          read_from_history(command[2],history);
+        }
+      }
+      if(command.size()==2)
       {
         int val=stoi(command[1]);
         for(int i=history.size()-val;i<history.size();i++){
