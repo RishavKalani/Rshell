@@ -22,19 +22,22 @@ void initialize_completion_list(){
   static const char* builtin[]={"echo","exit","type","cd","pwd","history",nullptr};
   set<string> seen;
   //builtin commands are added to the all commands list
-  for(int i=0;builtin[i];i++){
+  for(int i=0;builtin[i];i++)
+  {
     all_commands.push_back(builtin[i]);
     seen.insert(builtin[i]);
   }
   //add executables from path
   char *path_env=getenv("PATH");
-  if(!path_env){
+  if(!path_env)
+  {
     return;
   }
   string path(path_env);
   stringstream ss(path);
   string dir;
-  while(getline(ss,dir,':')){
+  while(getline(ss,dir,':'))
+  {
     if(!fs::exists(dir)) continue;
     for(const auto &entry : fs::directory_iterator(dir))
     {
@@ -66,6 +69,19 @@ void read_from_history(const string &path,vector<string> &history){
       add_history(line.c_str());
     }
   }
+}
+
+void write_from_history(const string &path,vector<string> &history)
+{
+  ofstream file(path,ios::out | ios::trunc);
+  if(!file){
+    perror("history");
+    return;
+  }
+  for(const string &cmd: history){
+    file << cmd << endl;
+  }
+  file.close();
 }
 
 string findExecutableInPath(const string &command){
@@ -209,10 +225,12 @@ int main(){
       else if(command[i]=="2>" || command[i]=="2>>")
       {
         redirect_err = true;
-        if(command[i]=="2>>"){
+        if(command[i]=="2>>")
+        {
           append_err=true;
         }
-        if(i+1>= command.size()){
+        if(i+1>= command.size())
+        {
           cout << "Syntax error" << endl;
           redirect_err=false;
           break;
@@ -220,7 +238,8 @@ int main(){
         outfile=command[i+1];
         i++;
       }
-      else{
+      else
+      {
         cleaned.push_back(command[i]);
       }
     }
@@ -276,8 +295,15 @@ int main(){
     }
     else if(command[0]=="history"){
       if(command.size()>2){
-        if(command[1]=="-r"){
+
+        if(command[1]=="-r")
+        {
           read_from_history(command[2],history);
+          continue;
+        }
+        if(command[1]=="w")
+        {
+          write_from_history(command[2],history);
           continue;
         }
       }
