@@ -70,7 +70,7 @@ void read_from_history(const string &path,vector<string> &history){
       add_history(line.c_str());
     }
   }
-  
+
 }
 
 void write_from_history(const string &path,vector<string> &history)
@@ -200,10 +200,12 @@ vector<string> tokenize(const string &input){
 }
 
 int main(){
+  vector<string> history;
+  string histfile = getenv("HISTFILE");
+  read_from_history(histfile,history);
   // Flush after every std::cout / std:cerr
   cout << unitbuf;
   cerr << unitbuf;
-  vector<string> history;
   set<string> kw={"echo","type","exit","pwd","cd","history"};
   initialize_completion_list();
   rl_attempted_completion_function = custom_completion;
